@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+# typescript
+*.js
+*.d.ts
+
+# env
+.env
+.env.*
+
+# logs
+*.log
