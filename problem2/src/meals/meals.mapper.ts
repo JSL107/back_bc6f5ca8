@@ -1,5 +1,5 @@
 import { NeisMealRow } from '../types/neis';
-import { DailyMealInfo, MealItem, MealResponse, MealType, MenuItem } from '../types/meal';
+import { MealItem, MealResponse, MealType, MenuItem } from '../types/meal';
 import { checkAllergyWarning, parseMenuString, parseNutrition } from '../utils/parser';
 
 export const toDishItems = (rawDishes: string, childAllergies: string[]): MealItem[] =>
@@ -34,15 +34,6 @@ export const toMealResponse = (row: NeisMealRow, childAllergies: string[]): Meal
     mealType: parseInt(row.MMEAL_SC_CODE, 10) as MealType,
     menu: extractMenu(items),
     nutrition: { ...parseNutrition(row.NTR_INFO), kcal: extractKcal(row.CAL_INFO) },
-    warnings: extractWarnings(items),
-  };
-};
-
-export const toDailyMealInfo = (row: NeisMealRow, childAllergies: string[]): DailyMealInfo => {
-  const items = toDishItems(row.DDISH_NM, childAllergies);
-  return {
-    mealType: parseInt(row.MMEAL_SC_CODE, 10) as MealType,
-    menu: extractMenu(items),
     warnings: extractWarnings(items),
   };
 };

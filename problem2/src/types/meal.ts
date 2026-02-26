@@ -16,40 +16,12 @@ export type Nutrition = {
   iron?: number;
 };
 
-export const NUTRITION_KEYS: (keyof Nutrition)[] = [
-  'kcal',
-  'carbohydrate',
-  'protein',
-  'fat',
-  'calcium',
-  'iron',
-];
-
-export type AllergySummary = Record<string, string[]>;
-
 export type MealResponse = {
   date: string;
   mealType: MealType;
   menu: MenuItem[];
   nutrition: Nutrition;
   warnings: string[];
-};
-
-export type DailyMealInfo = {
-  mealType: MealType;
-  menu: MenuItem[];
-  warnings: string[];
-};
-
-export type DailyMeal = {
-  date: string;
-  dayOfWeek: string;
-  meals: DailyMealInfo[];
-};
-
-export type WeeklySummary = {
-  weeklyMeals: DailyMeal[];
-  averageNutrition: Nutrition;
 };
 
 export type MealQuery = {
