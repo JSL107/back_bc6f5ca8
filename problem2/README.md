@@ -38,46 +38,50 @@
     - 동일 조건 요청에 한해 응답 시간을 개선하고 API 비용을 절감하기 위해 인메모리 캐시를 적용했습니다.
 
 **[요청 예시: 특정 기간 식단 조회]**
-    ```bash
-    curl "http://localhost:3000/api/v1/meals?officeCode=B10&schoolCode=7010536&fromDate=20240415&toDate=20240419&mealType=2&childAllergies=1,5"
-    ```
-    ```json
-    [
-      {
-        "date": "20240415",
-        "mealType": 2,
-        "menu": [
-          { "name": "현미밥", "allergies": [] },
-          { "name": "쇠고기미역국", "allergies": ["16"] },
-          { "name": "오징어볶음", "allergies": ["5", "6", "17"] },
-          { "name": "배추김치", "allergies": ["9"] },
-          { "name": "우유", "allergies": ["2"] }
-        ],
-        "nutrition": {
-          "kcal": 500,
-          "carbohydrate": 70,
-          "protein": 20,
-          "fat": 15,
-          "calcium": 250,
-          "iron": 4.5
-        },
-        "warnings": ["오징어볶음(5,6,17)"]
-      }
-    ]
-    ```
+
+```http
+GET /api/v1/meals?officeCode=B10&schoolCode=7010536&fromDate=20240415&toDate=20240419&mealType=2&childAllergies=1,5
+```
+
+```json
+[
+  {
+    "date": "20240415",
+    "mealType": 2,
+    "menu": [
+      { "name": "현미밥", "allergies": [] },
+      { "name": "쇠고기미역국", "allergies": ["16"] },
+      { "name": "오징어볶음", "allergies": ["5", "6", "17"] },
+      { "name": "배추김치", "allergies": ["9"] },
+      { "name": "우유", "allergies": ["2"] }
+    ],
+    "nutrition": {
+      "kcal": 500,
+      "carbohydrate": 70,
+      "protein": 20,
+      "fat": 15,
+      "calcium": 250,
+      "iron": 4.5
+    },
+    "warnings": ["오징어볶음(5,6,17)"]
+  }
+]
+```
 
 **[요청 예시: AI 영양사 코멘트 조회]**
-    ```bash
-    curl "http://localhost:3000/api/v1/meals/ai-comment?officeCode=B10&schoolCode=7010536&period=weekly"
-    ```
-    ```json
-    {
-      "nutritionistComment": "이번 주 식단은 단백질과 칼슘이 풍부해 아이들 성장에 아주 좋겠네요! 🥰 다만 현미밥과 오징어볶음으로 나트륨이 살짝 높을 수 있으니, 금요일 저녁엔 간이 삼삼한 채소 반찬을 챙겨주시면 더욱 완벽합니다! 🥦"
-    }
-    ```
 
--   전역 검증/예외 처리, 외부 API 타임아웃, in-memory 캐시(TTL 10분) 적용
--   메뉴 파싱/알레르기 매핑/영양소 파싱/요약 계산 로직 단위 테스트 작성
+```http
+GET /api/v1/meals/ai-comment?officeCode=B10&schoolCode=7010536&period=weekly
+```
+
+```json
+{
+  "nutritionistComment": "이번 주 식단은 단백질과 칼슘이 풍부해 아이들 성장에 아주 좋겠네요! 🥰 다만 현미밥과 오징어볶음으로 나트륨이 살짝 높을 수 있으니, 금요일 저녁엔 간이 삼삼한 채소 반찬을 챙겨주시면 더욱 완벽합니다! 🥦"
+}
+```
+
+- 전역 검증/예외 처리, 외부 API 타임아웃, in-memory 캐시(TTL 10분) 적용
+- 메뉴 파싱/알레르기 매핑/영양소 파싱/요약 계산 로직 단위 테스트 작성
 
 ## 실행 방법
 
