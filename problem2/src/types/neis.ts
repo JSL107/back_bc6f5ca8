@@ -1,3 +1,5 @@
+import { MealType } from './meal';
+
 export interface NeisMealRow {
   ATPT_OFCDC_SC_CODE: string;
   SD_SCHUL_CODE: string;
@@ -18,5 +20,5 @@ export type NeisQuery = {
   schoolCode: string;
   fromDate: string;
   toDate: string;
-  mealType?: number;
+  mealType?: MealType;
 };

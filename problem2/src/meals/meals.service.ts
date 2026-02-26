@@ -1,14 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { NeisRepository } from '../infrastructure/neis/neis.repository';
-import { WeeklySummary, Nutrition, NUTRITION_KEYS, MealQuery, MealResponse, DailyMeal, DailyMealInfo } from '../types/meal';
-import { toDailyMealInfo, toMealResponse } from './meals.mapper';
-import { parseNutrition } from '../utils/parser';
-import { toDayOfWeek } from '../utils/date';
+import { MealQuery, MealResponse } from '../types/meal';
+import { toMealResponse } from './meals.mapper';
 
 @Injectable()
 export class MealsService {
   constructor(@Inject(NeisRepository) private readonly neisRepository: NeisRepository) {}
-
 
   async getMealSummary({
     officeCode,
@@ -26,18 +23,11 @@ export class MealsService {
       mealType,
     });
 
-    if (!mealRows || mealRows.length === 0) {
+    if (!mealRows?.length) {
       return [];
     }
 
     const responses = mealRows.map((row) => toMealResponse(row, childAllergies));
-
-    if (childAllergies && childAllergies.length > 0) {
-      return responses.filter((res) => res.warnings.length > 0);
-    }
-
-    return responses;
+    return childAllergies.length > 0 ? responses.filter((r) => r.warnings.length > 0) : responses;
   }
-
-
 }

@@ -13,6 +13,6 @@ import { NeisRepositoryImpl } from './neis/neis.repository.impl';
     { provide: NeisRepository, useClass: NeisRepositoryImpl },
     { provide: CacheService, useClass: NodeCacheService },
   ],
-  exports: [NeisRepository],
+  exports: [NeisRepository, CacheService],
 })
 export class InfrastructureModule {}

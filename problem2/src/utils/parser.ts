@@ -40,7 +40,9 @@ export const checkAllergyWarning = (menuAllergens: string[], childAllergies: str
 
 const extractNutrient = (ntrInfo: string, regex: RegExp): number | undefined => {
   const matched = ntrInfo.match(regex);
-  if (!matched) return undefined;
+  if (!matched) {
+    return undefined;
+  }
   const parsed = parseFloat(matched[1]);
   return Number.isNaN(parsed) ? undefined : parsed;
 };

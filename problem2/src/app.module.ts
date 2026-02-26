@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { MealsModule } from './meals/meals.module';
 import { validate } from './env.validation';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { validate } from './env.validation';
       validate,
     }),
     MealsModule,
+    AiModule,
   ],
   providers: [
     { provide: APP_PIPE, useValue: new ValidationPipe({ transform: true, whitelist: true }) },

@@ -5,6 +5,8 @@ export type MenuItem = {
 
 export type MealItem = MenuItem & { warning: boolean };
 
+export type MealType = 1 | 2 | 3;
+
 export type Nutrition = {
   kcal?: number;
   carbohydrate?: number;
@@ -27,14 +29,14 @@ export type AllergySummary = Record<string, string[]>;
 
 export type MealResponse = {
   date: string;
-  mealType: number;
+  mealType: MealType;
   menu: MenuItem[];
   nutrition: Nutrition;
   warnings: string[];
 };
 
 export type DailyMealInfo = {
-  mealType: number;
+  mealType: MealType;
   menu: MenuItem[];
   warnings: string[];
 };
@@ -49,8 +51,6 @@ export type WeeklySummary = {
   weeklyMeals: DailyMeal[];
   averageNutrition: Nutrition;
 };
-
-export type MealType = 1 | 2 | 3;
 
 export type MealQuery = {
   officeCode: string;

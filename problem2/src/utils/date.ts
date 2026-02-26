@@ -1,4 +1,8 @@
-const boundsCache = new Map<string, { fromDate: string; toDate: string }>();
+import { match, P } from 'ts-pattern';
+
+export type DateRange = { fromDate: string; toDate: string };
+
+const boundsCache = new Map<string, DateRange>();
 
 export const toYMD = (date: Date): string =>
   [
@@ -20,10 +24,9 @@ export const toDayOfWeek = (ymd: string): string =>
     ).getDay()
   ];
 
-export const getThisWeekBounds = (): { fromDate: string; toDate: string } => {
+export const getThisWeekBounds = (): DateRange => {
   const today = toYMD(new Date());
   const cached = boundsCache.get(today);
-
   if (cached) {
     return cached;
   }
@@ -38,7 +41,19 @@ export const getThisWeekBounds = (): { fromDate: string; toDate: string } => {
   const friday = new Date(monday);
   friday.setDate(monday.getDate() + 4);
 
-  const bounds = { fromDate: toYMD(monday), toDate: toYMD(friday) };
+  const bounds: DateRange = { fromDate: toYMD(monday), toDate: toYMD(friday) };
   boundsCache.set(today, bounds);
   return bounds;
 };
+
+export const resolveDateRange = (fromDate?: string, toDate?: string, period?: string): DateRange =>
+  match({ fromDate, toDate, period })
+    .with({ fromDate: P.string, toDate: P.string }, ({ fromDate, toDate }) => ({
+      fromDate,
+      toDate,
+    }))
+    .with({ period: 'weekly' }, () => getThisWeekBounds())
+    .otherwise(() => {
+      const today = getTodayDate();
+      return { fromDate: today, toDate: today };
+    });

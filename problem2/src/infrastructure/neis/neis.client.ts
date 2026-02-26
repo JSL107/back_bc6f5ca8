@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-
 import { firstValueFrom } from 'rxjs';
+import { match } from 'ts-pattern';
 import { NeisMealRow, NeisMealSection, NeisQuery } from '../../types/neis';
 
 const NEIS_API_URL = 'https://open.neis.go.kr/hub/mealServiceDietInfo';
@@ -41,19 +41,20 @@ export class NeisClient {
       }),
     );
 
-    if (data.RESULT && data.RESULT.CODE !== 'INFO-200' && data.RESULT.CODE !== 'INFO-000') {
-      throw new Error(`NEIS API Error: ${data.RESULT.MESSAGE} (${data.RESULT.CODE})`);
-    }
-
-    if (data.RESULT?.CODE === 'INFO-200') {
-      return [];
-    }
-
-    if (!Array.isArray(data.mealServiceDietInfo)) {
-      throw new Error(data.RESULT?.MESSAGE ?? 'Unknown NEIS API Error');
-    }
-
-    const mealData = data.mealServiceDietInfo as NeisMealSection[];
-    return mealData[1]?.row ?? [];
+    return match(data)
+      .with({ RESULT: { CODE: 'INFO-200' } }, () => [] as NeisMealRow[])
+      .when(
+        (d) => !!(d.RESULT && d.RESULT.CODE !== 'INFO-000'),
+        (d) => {
+          throw new Error(`NEIS API Error: ${d.RESULT.MESSAGE} (${d.RESULT.CODE})`);
+        },
+      )
+      .when(
+        (d) => !Array.isArray(d.mealServiceDietInfo),
+        () => {
+          throw new Error(data.RESULT?.MESSAGE ?? 'Unknown NEIS API Error');
+        },
+      )
+      .otherwise((d) => (d.mealServiceDietInfo as NeisMealSection[])[1]?.row ?? []);
   }
 }
